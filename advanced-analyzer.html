@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Deal Analyzer - REBWB</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="css/styles.css">
     <style>
         @media print {
@@ -315,9 +314,8 @@
     </footer>
 
     <script>
-        const SUPABASE_URL = 'https://dvuhtfzsvcacyrlfettz.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2dWh0ZnpzdmNhY3lybGZldHR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NDk3OTYsImV4cCI6MjA4NTIyNTc5Nn0.vUtnPXeQrzU0kO0E7qK2qJtZ_RCqnXCEFSa60adHld0';
-        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Supabase removed in migration. searchProperties() and saveAnalysis()
+        // are stubbed below — re-add via new Worker endpoints when needed.
 
         function getInputs() {
             return {
@@ -453,48 +451,9 @@
             document.getElementById('searchLoading').classList.remove('hidden');
             document.getElementById('propertiesGrid').innerHTML = '';
 
-            try {
-                const res = await fetch(SUPABASE_URL + '/functions/v1/property-search', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        postal_code: zip,
-                        status: [document.getElementById('searchStatus').value],
-                        limit: 12
-                    })
-                });
-                const json = await res.json();
-                document.getElementById('searchLoading').classList.add('hidden');
-
-                if (json.data?.data?.home_search?.results) {
-                    const props = json.data.data.home_search.results;
-                    if (props.length === 0) {
-                        document.getElementById('propertiesGrid').innerHTML = '<p class="text-gray-400 col-span-3">No properties found in this ZIP code.</p>';
-                        return;
-                    }
-                    let html = '';
-                    props.forEach(p => {
-                        const loc = p.location || {};
-                        const addr = loc.address?.line || 'Address unavailable';
-                        const price = p.list_price || p.sold_price || 0;
-                        const beds = p.description?.beds || '-';
-                        const baths = p.description?.baths || '-';
-                        const sqft = p.description?.sqft || '-';
-                        html += `<div class="bg-gray-900 border border-gray-700 rounded p-4 cursor-pointer hover:border-blue-500 transition" onclick="useProperty(${price}, ${sqft === '-' ? 1500 : sqft})">
-                            <p class="font-bold text-sm mb-1 truncate">${addr}</p>
-                            <p class="text-blue-400 font-bold">$${price.toLocaleString()}</p>
-                            <p class="text-xs text-gray-400">${beds} bed | ${baths} bath | ${sqft} sqft</p>
-                            <p class="text-xs text-gray-500 mt-1">Click to analyze</p>
-                        </div>`;
-                    });
-                    document.getElementById('propertiesGrid').innerHTML = html;
-                } else {
-                    document.getElementById('propertiesGrid').innerHTML = '<p class="text-gray-400 col-span-3">No results found.</p>';
-                }
-            } catch (e) {
-                document.getElementById('searchLoading').classList.add('hidden');
-                document.getElementById('propertiesGrid').innerHTML = '<p class="text-red-400 col-span-3">Error searching properties. Please try again.</p>';
-            }
+            // TODO: re-add property search via new Worker endpoint.
+            document.getElementById('searchLoading').classList.add('hidden');
+            document.getElementById('propertiesGrid').innerHTML = '<p class="text-gray-400 col-span-3">Property search is temporarily unavailable.</p>';
         }
 
         function useProperty(price, sqft) {
@@ -509,24 +468,8 @@
         }
 
         async function saveAnalysis() {
-            const { data: { user } } = await sb.auth.getUser();
-            if (!user) { alert('Please log in to save.'); return; }
-
-            const inputs = getInputs();
-            const base = calcDeal(inputs);
-
-            try {
-                const { error } = await sb.from('rebwb_saved_analyses').insert({
-                    user_id: user.id,
-                    analysis_name: inputs.dealName,
-                    analysis_data: { inputs, results: base },
-                    scenario_type: 'realistic'
-                });
-                if (error) throw error;
-                alert('Analysis saved successfully!');
-            } catch (e) {
-                alert('Error saving: ' + e.message);
-            }
+            // TODO: re-add via new Worker endpoint backed by a saved_analyses table.
+            alert('Saving analyses is temporarily unavailable. Use Print to keep a copy.');
         }
 
         // Initial calculation

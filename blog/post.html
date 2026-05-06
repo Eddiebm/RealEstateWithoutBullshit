@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading... - REBWB Blog</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body class="bg-gray-900 text-gray-100">
@@ -54,60 +53,14 @@
     </footer>
 
     <script>
-        const SUPABASE_URL = 'https://dvuhtfzsvcacyrlfettz.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2dWh0ZnpzdmNhY3lybGZldHR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NDk3OTYsImV4cCI6MjA4NTIyNTc5Nn0.vUtnPXeQrzU0kO0E7qK2qJtZ_RCqnXCEFSa60adHld0';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        function formatDate(dateStr) {
-            return new Date(dateStr).toLocaleDateString('en-US', { 
-                year: 'numeric', month: 'long', day: 'numeric' 
-            });
-        }
-
-        async function loadPost() {
-            const params = new URLSearchParams(window.location.search);
-            const slug = params.get('slug');
-
-            if (!slug) {
-                document.getElementById('loading').textContent = 'Post not found.';
-                return;
-            }
-
-            const { data: post, error } = await supabase
-                .from('blog_posts')
-                .select('*')
-                .eq('slug', slug)
-                .eq('published', true)
-                .single();
-
-            if (error || !post) {
-                document.getElementById('loading').textContent = 'Post not found.';
-                return;
-            }
-
-            // Update page title
-            document.title = `${post.title} - REBWB Blog`;
-
-            // Render header
-            document.getElementById('post-header').innerHTML = `
-                <a href="../blog.html" class="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block">&larr; Back to Blog</a>
-                <h1 class="text-3xl md:text-4xl font-bold mb-4">${post.title}</h1>
-                <div class="flex items-center text-sm text-gray-400">
-                    <span>${formatDate(post.created_at)}</span>
-                    <span class="mx-2">•</span>
-                    <span>6 min read</span>
-                </div>
-            `;
-
-            // Render content (supports markdown)
-            const content = post.content || '';
-            document.getElementById('post-content').innerHTML = marked.parse(content);
-
-            // Show CTA
-            document.getElementById('post-cta').classList.remove('hidden');
-        }
-
-        loadPost();
+        // TODO: re-add blog rendering. Posts were previously fetched from a
+        // Supabase blog_posts table; the new stack doesn't have that table yet.
+        // Options: (a) add a blog_posts table + Worker endpoint, (b) ship blog
+        // posts as static markdown files in this repo and render them here.
+        document.getElementById('loading').innerHTML = `
+            <a href="../blog.html" class="text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block">&larr; Back to Blog</a>
+            <p class="text-gray-400 mt-6">This post is being migrated. Check back soon.</p>
+        `;
     </script>
 
     <style>
