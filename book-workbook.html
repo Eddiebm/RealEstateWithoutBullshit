@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book & Workbook - REBWB</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="bg-gray-900 text-gray-100">
@@ -127,58 +126,20 @@
 
     <script src="js/main.js"></script>
     <script>
-        const SUPABASE_URL = 'https://dvuhtfzsvcacyrlfettz.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2dWh0ZnpzdmNhY3lybGZldHR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NDk3OTYsImV4cCI6MjA4NTIyNTc5Nn0.vUtnPXeQrzU0kO0E7qK2qJtZ_RCqnXCEFSa60adHld0';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        async function handleCheckout(planType) {
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = 'Loading...';
-            btn.disabled = true;
-
-            try {
-                const response = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        planType: planType,
-                        successUrl: window.location.origin + '/book-workbook.html?payment=success',
-                        cancelUrl: window.location.origin + '/book-workbook.html'
-                    })
-                });
-
-                const result = await response.json();
-                if (result.data?.checkoutUrl) {
-                    window.location.href = result.data.checkoutUrl;
-                } else {
-                    throw new Error(result.error?.message || 'Failed to create checkout');
-                }
-            } catch (error) {
-                alert('Error: ' + error.message);
-                btn.textContent = originalText;
-                btn.disabled = false;
-            }
+        // Checkout flows live on the unified pricing page now.
+        function handleCheckout() {
+            window.location.href = '/pricing.html';
         }
 
-        // Cliff Notes Form
+        // Cliff Notes Form — TODO: re-add email capture (Resend audience or new endpoint).
+        // For now, just trigger the PDF download client-side.
         document.getElementById('cliffNotesForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const email = document.getElementById('cliffEmail').value;
             const btn = this.querySelector('button');
             btn.disabled = true;
             btn.textContent = 'Sending...';
 
             try {
-                // Save to Supabase
-                await supabaseClient.from('cliff_notes_signups').insert({ email });
-
-                // Subscribe to Mailchimp
-                await fetch(`${SUPABASE_URL}/functions/v1/mailchimp-subscribe`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
-                });
 
                 // Show success
                 document.getElementById('cliffSuccess').classList.remove('hidden');

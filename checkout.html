@@ -68,9 +68,10 @@
     </footer>
 
     <script>
-        const SUPABASE_URL = 'https://dvuhtfzsvcacyrlfettz.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2dWh0ZnpzdmNhY3lybGZldHR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NDk3OTYsImV4cCI6MjA4NTIyNTc5Nn0.vUtnPXeQrzU0kO0E7qK2qJtZ_RCqnXCEFSa60adHld0';
-        
+        // TODO: cart-based checkout was previously a Supabase Edge Function.
+        // The new Worker only handles subscription checkout (discipline/system).
+        // For now, this page sends users to /pricing.html for paid plans.
+
         function renderCart() {
             const cart = JSON.parse(localStorage.getItem('rebwb_cart') || '[]');
             const container = document.getElementById('cartItems');
@@ -131,35 +132,10 @@
             btn.disabled = true;
             errorMsg.classList.add('hidden');
             
-            try {
-                const response = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                    },
-                    body: JSON.stringify({
-                        items: cart,
-                        email: email,
-                        success_url: window.location.origin + '/checkout-success.html',
-                        cancel_url: window.location.origin + '/checkout.html',
-                    }),
-                });
-                
-                const data = await response.json();
-                
-                if (data.url) {
-                    localStorage.removeItem('rebwb_cart');
-                    window.location.href = data.url;
-                } else {
-                    throw new Error(data.error || 'Checkout failed. Please try again.');
-                }
-            } catch (error) {
-                errorMsg.textContent = error.message || 'Something went wrong. Please try again.';
-                errorMsg.classList.remove('hidden');
-                btn.textContent = 'Complete Purchase';
-                btn.disabled = false;
-            }
+            errorMsg.textContent = 'Cart-based checkout is unavailable during the migration. For paid plans, visit /pricing.html.';
+            errorMsg.classList.remove('hidden');
+            btn.textContent = 'Complete Purchase';
+            btn.disabled = false;
         }
         
         renderCart();

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Downloads - REBWB</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="bg-gray-900 text-gray-100">
@@ -151,40 +150,43 @@
     </footer>
 
     <script>
-        const SUPABASE_URL = 'https://dvuhtfzsvcacyrlfettz.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2dWh0ZnpzdmNhY3lybGZldHR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NDk3OTYsImV4cCI6MjA4NTIyNTc5Nn0.vUtnPXeQrzU0kO0E7qK2qJtZ_RCqnXCEFSa60adHld0';
-        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         async function loadPurchases() {
-            const { data: { user } } = await sb.auth.getUser();
-            if (!user) return;
+            const token = localStorage.getItem('rebwb_jwt');
+            if (!token) return; // requireAuth() above already redirected
 
-            // Check subscriptions table for purchases
-            const { data: subs } = await sb.from('rebwb_subscriptions')
-                .select('*')
-                .eq('user_id', user.id)
-                .eq('status', 'active');
+            const loading = document.getElementById('loading');
+            const noPurchases = document.getElementById('no-purchases');
+            const downloads = document.getElementById('downloads');
 
-            document.getElementById('loading').classList.add('hidden');
+            try {
+                const res = await fetch('https://api.realestatewithoutbullshit.com/api/me', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                loading.classList.add('hidden');
+                if (!res.ok) { noPurchases.classList.remove('hidden'); return; }
 
-            if (!subs || subs.length === 0) {
-                document.getElementById('no-purchases').classList.remove('hidden');
-                return;
-            }
-
-            document.getElementById('downloads').classList.remove('hidden');
-
-            subs.forEach(sub => {
-                const date = new Date(sub.created_at).toLocaleDateString();
-                
-                if (sub.plan_type === 'reality-check' || sub.plan_type === 'operators-path') {
-                    document.getElementById('book-download').classList.remove('hidden');
-                    document.getElementById('workbook-download').classList.remove('hidden');
-                    document.getElementById('templates-download').classList.remove('hidden');
-                    document.getElementById('book-date').textContent = date;
-                    document.getElementById('workbook-date').textContent = date;
+                const { purchases } = await res.json();
+                if (!purchases || purchases.length === 0) {
+                    noPurchases.classList.remove('hidden');
+                    return;
                 }
-            });
+
+                downloads.classList.remove('hidden');
+                purchases.forEach(p => {
+                    const date = new Date(p.created_at).toLocaleDateString();
+                    if (p.plan_type === 'discipline' || p.plan_type === 'system') {
+                        document.getElementById('book-download').classList.remove('hidden');
+                        document.getElementById('workbook-download').classList.remove('hidden');
+                        document.getElementById('templates-download').classList.remove('hidden');
+                        document.getElementById('book-date').textContent = date;
+                        document.getElementById('workbook-date').textContent = date;
+                    }
+                });
+            } catch (err) {
+                console.error(err);
+                loading.classList.add('hidden');
+                noPurchases.classList.remove('hidden');
+            }
         }
 
         loadPurchases();
