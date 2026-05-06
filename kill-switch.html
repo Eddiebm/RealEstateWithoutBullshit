@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kill Switch — DealPilot</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
@@ -29,30 +28,18 @@
         </div>
     </nav>
 
-    <!-- BLOCKING MODAL: Stop Here. Read This First. -->
+    <!-- BLOCKING MODAL -->
     <div id="blockingModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
         <div class="bg-white max-w-lg mx-4 p-8 shadow-2xl">
             <h2 class="text-2xl font-semibold text-stone-900 mb-4">Stop Here. Read This First.</h2>
-            <p class="text-stone-700 leading-relaxed mb-4">
-                You just admitted this deal doesn't survive a 15% rent drop.
-            </p>
-            <p class="text-stone-600 leading-relaxed mb-4">
-                Most deals fail right here. The rest of this tool just explains why.
-            </p>
-            <p class="text-stone-700 leading-relaxed mb-6">
-                Continuing won't change the math. It'll just give you words to ignore it.
-            </p>
+            <p class="text-stone-700 leading-relaxed mb-4">You just admitted this deal doesn't survive a 15% rent drop.</p>
+            <p class="text-stone-600 leading-relaxed mb-4">Most deals fail right here. The rest of this tool just explains why.</p>
+            <p class="text-stone-700 leading-relaxed mb-6">Continuing won't change the math. It'll just give you words to ignore it.</p>
             <div class="space-y-3">
-                <button onclick="continueAnyway()" class="w-full bg-stone-900 hover:bg-stone-800 text-white px-6 py-4 text-lg transition">
-                    Continue Anyway
-                </button>
-                <button onclick="walkAway()" class="w-full border-2 border-stone-400 hover:border-stone-600 text-stone-700 hover:text-stone-900 px-6 py-4 text-lg transition">
-                    Walk Away
-                </button>
+                <button onclick="continueAnyway()" class="w-full bg-stone-900 hover:bg-stone-800 text-white px-6 py-4 text-lg transition">Continue Anyway</button>
+                <button onclick="walkAway()" class="w-full border-2 border-stone-400 hover:border-stone-600 text-stone-700 hover:text-stone-900 px-6 py-4 text-lg transition">Walk Away</button>
             </div>
-            <p class="mt-6 text-xs text-stone-400 text-center">
-                The best investors know when to stop looking.
-            </p>
+            <p class="mt-6 text-xs text-stone-400 text-center">The best investors know when to stop looking.</p>
         </div>
     </div>
 
@@ -60,39 +47,23 @@
     <div id="blockedScreen" class="hidden min-h-[80vh] flex items-center justify-center">
         <div class="max-w-xl mx-auto px-6 text-center">
             <div class="prose prose-stone prose-lg max-w-none mb-12">
-                <p class="text-xl leading-relaxed text-stone-700 mb-6">
-                    You've seen the truth once.
-                </p>
-                <p class="text-lg leading-relaxed text-stone-600 mb-6">
-                    Most people stop here and repeat the same mistake on the next deal.
-                </p>
-                <p class="text-lg leading-relaxed text-stone-600 mb-6 serif italic">
-                    Insight fades.
-                </p>
-                <p class="text-lg leading-relaxed text-stone-700 mb-6 font-medium">
-                    Discipline doesn't.
-                </p>
-                <p class="text-lg leading-relaxed text-stone-600 mb-12">
-                    DealPilot works only if you use it before every decision, not just the first one.
-                </p>
+                <p class="text-xl leading-relaxed text-stone-700 mb-6">You've seen the truth once.</p>
+                <p class="text-lg leading-relaxed text-stone-600 mb-6">Most people stop here and repeat the same mistake on the next deal.</p>
+                <p class="text-lg leading-relaxed text-stone-600 mb-6 serif italic">Insight fades.</p>
+                <p class="text-lg leading-relaxed text-stone-700 mb-6 font-medium">Discipline doesn't.</p>
+                <p class="text-lg leading-relaxed text-stone-600 mb-12">DealPilot works only if you use it before every decision, not just the first one.</p>
             </div>
             <div class="space-y-4">
-                <a href="pricing.html" class="block w-full bg-stone-900 hover:bg-stone-800 text-white px-8 py-4 text-lg transition">
-                    Unlock Discipline Access
-                </a>
-                <a href="pricing.html#system" class="block w-full border border-stone-400 hover:border-stone-600 text-stone-700 px-8 py-4 text-lg transition">
-                    Build My System
-                </a>
+                <a href="pricing.html" class="block w-full bg-stone-900 hover:bg-stone-800 text-white px-8 py-4 text-lg transition">Unlock Discipline Access</a>
+                <a href="pricing.html#system" class="block w-full border border-stone-400 hover:border-stone-600 text-stone-700 px-8 py-4 text-lg transition">Build My System</a>
             </div>
-            <p class="mt-8 text-sm text-stone-500">
-                You already know what the mistake looks like.
-            </p>
+            <p class="mt-8 text-sm text-stone-500">You already know what the mistake looks like.</p>
         </div>
     </div>
 
     <!-- Step Container -->
     <div id="stepContainer" class="min-h-[80vh] flex items-center justify-center py-12">
-        
+
         <!-- Step 1: Inputs -->
         <div id="step1" class="step-screen max-w-md mx-auto px-6 w-full">
             <div class="text-center mb-12">
@@ -100,39 +71,32 @@
                 <h2 class="text-2xl font-semibold text-stone-900">The Numbers</h2>
                 <p class="text-stone-600 mt-2">No projections. No optimism.</p>
             </div>
-            
+
             <div class="space-y-6">
                 <div>
                     <label class="block text-sm text-stone-600 mb-2">Purchase Price</label>
-                    <input type="number" id="purchasePrice" placeholder="250000" 
-                        class="w-full border border-stone-300 px-4 py-3 text-lg focus:outline-none focus:border-stone-500">
+                    <input type="number" id="purchasePrice" placeholder="250000" class="w-full border border-stone-300 px-4 py-3 text-lg focus:outline-none focus:border-stone-500">
                 </div>
                 <div>
                     <label class="block text-sm text-stone-600 mb-2">Monthly Rent (current only)</label>
-                    <input type="number" id="monthlyRent" placeholder="1800" 
-                        class="w-full border border-stone-300 px-4 py-3 text-lg focus:outline-none focus:border-stone-500">
+                    <input type="number" id="monthlyRent" placeholder="1800" class="w-full border border-stone-300 px-4 py-3 text-lg focus:outline-none focus:border-stone-500">
                 </div>
                 <div>
                     <label class="block text-sm text-stone-600 mb-2">Monthly Expenses (all-in)</label>
-                    <input type="number" id="monthlyExpenses" placeholder="1400" 
-                        class="w-full border border-stone-300 px-4 py-3 text-lg focus:outline-none focus:border-stone-500">
+                    <input type="number" id="monthlyExpenses" placeholder="1400" class="w-full border border-stone-300 px-4 py-3 text-lg focus:outline-none focus:border-stone-500">
                 </div>
                 <div>
                     <label class="block text-sm text-stone-600 mb-2">Cash Invested</label>
-                    <input type="number" id="cashInvested" placeholder="60000" 
-                        class="w-full border border-stone-300 px-4 py-3 text-lg focus:outline-none focus:border-stone-500">
+                    <input type="number" id="cashInvested" placeholder="60000" class="w-full border border-stone-300 px-4 py-3 text-lg focus:outline-none focus:border-stone-500">
                 </div>
                 <div>
                     <label class="block text-sm text-stone-600 mb-2">Why do you want this deal?</label>
-                    <textarea id="whyReason" rows="3" minlength="10" placeholder="Be honest with yourself..."
-                        class="w-full border border-stone-300 px-4 py-3 text-lg focus:outline-none focus:border-stone-500 resize-none"></textarea>
+                    <textarea id="whyReason" rows="3" minlength="10" placeholder="Be honest with yourself..." class="w-full border border-stone-300 px-4 py-3 text-lg focus:outline-none focus:border-stone-500 resize-none"></textarea>
                     <p id="charCount" class="text-xs text-stone-400 mt-1">Minimum 10 characters</p>
                 </div>
             </div>
-            
-            <button onclick="nextStep(1)" class="w-full mt-8 bg-stone-900 hover:bg-stone-800 text-white px-8 py-4 text-lg transition">
-                Continue
-            </button>
+
+            <button onclick="nextStep(1)" class="w-full mt-8 bg-stone-900 hover:bg-stone-800 text-white px-8 py-4 text-lg transition">Continue</button>
         </div>
 
         <!-- Step 2: Rent Drop -->
@@ -141,14 +105,9 @@
                 <p class="text-sm text-stone-500 mb-2">Step 2 of 5</p>
                 <h2 class="text-2xl font-semibold text-stone-900 leading-relaxed">If rent drops 15%, does this deal still survive?</h2>
             </div>
-            
             <div class="space-y-4">
-                <button onclick="answerQ1('yes')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">
-                    Yes
-                </button>
-                <button onclick="answerQ1('no')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">
-                    No
-                </button>
+                <button onclick="answerQ1('yes')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">Yes</button>
+                <button onclick="answerQ1('no')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">No</button>
             </div>
         </div>
 
@@ -158,17 +117,10 @@
                 <p class="text-sm text-stone-500 mb-2">Step 3 of 5</p>
                 <h2 class="text-2xl font-semibold text-stone-900 leading-relaxed">If nothing improves for 24 months, can you still hold?</h2>
             </div>
-            
             <div class="space-y-4">
-                <button onclick="answerQ2('yes')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">
-                    Yes
-                </button>
-                <button onclick="answerQ2('barely')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">
-                    Barely
-                </button>
-                <button onclick="answerQ2('no')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">
-                    No
-                </button>
+                <button onclick="answerQ2('yes')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">Yes</button>
+                <button onclick="answerQ2('barely')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">Barely</button>
+                <button onclick="answerQ2('no')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">No</button>
             </div>
         </div>
 
@@ -179,33 +131,14 @@
                 <h2 class="text-2xl font-semibold text-stone-900 leading-relaxed">What must go right for this deal to work?</h2>
                 <p class="text-stone-600 mt-2 text-sm">Select all that apply</p>
             </div>
-            
             <div class="space-y-3" id="mustGoRightOptions">
-                <label class="flex items-center p-4 border border-stone-300 hover:border-stone-500 cursor-pointer transition">
-                    <input type="checkbox" value="appreciation" class="mr-4 w-5 h-5">
-                    <span class="text-lg text-stone-700">Appreciation</span>
-                </label>
-                <label class="flex items-center p-4 border border-stone-300 hover:border-stone-500 cursor-pointer transition">
-                    <input type="checkbox" value="rent_increases" class="mr-4 w-5 h-5">
-                    <span class="text-lg text-stone-700">Rent increases</span>
-                </label>
-                <label class="flex items-center p-4 border border-stone-300 hover:border-stone-500 cursor-pointer transition">
-                    <input type="checkbox" value="perfect_tenant" class="mr-4 w-5 h-5">
-                    <span class="text-lg text-stone-700">Perfect tenant</span>
-                </label>
-                <label class="flex items-center p-4 border border-stone-300 hover:border-stone-500 cursor-pointer transition">
-                    <input type="checkbox" value="refinance" class="mr-4 w-5 h-5">
-                    <span class="text-lg text-stone-700">Refinance timing</span>
-                </label>
-                <label class="flex items-center p-4 border border-stone-300 hover:border-stone-500 cursor-pointer transition">
-                    <input type="checkbox" value="tax_strategy" class="mr-4 w-5 h-5">
-                    <span class="text-lg text-stone-700">Tax strategy</span>
-                </label>
+                <label class="flex items-center p-4 border border-stone-300 hover:border-stone-500 cursor-pointer transition"><input type="checkbox" value="appreciation" class="mr-4 w-5 h-5"><span class="text-lg text-stone-700">Appreciation</span></label>
+                <label class="flex items-center p-4 border border-stone-300 hover:border-stone-500 cursor-pointer transition"><input type="checkbox" value="rent_increases" class="mr-4 w-5 h-5"><span class="text-lg text-stone-700">Rent increases</span></label>
+                <label class="flex items-center p-4 border border-stone-300 hover:border-stone-500 cursor-pointer transition"><input type="checkbox" value="perfect_tenant" class="mr-4 w-5 h-5"><span class="text-lg text-stone-700">Perfect tenant</span></label>
+                <label class="flex items-center p-4 border border-stone-300 hover:border-stone-500 cursor-pointer transition"><input type="checkbox" value="refinance" class="mr-4 w-5 h-5"><span class="text-lg text-stone-700">Refinance timing</span></label>
+                <label class="flex items-center p-4 border border-stone-300 hover:border-stone-500 cursor-pointer transition"><input type="checkbox" value="tax_strategy" class="mr-4 w-5 h-5"><span class="text-lg text-stone-700">Tax strategy</span></label>
             </div>
-            
-            <button onclick="answerQ3()" class="w-full mt-8 bg-stone-900 hover:bg-stone-800 text-white px-8 py-4 text-lg transition">
-                Continue
-            </button>
+            <button onclick="answerQ3()" class="w-full mt-8 bg-stone-900 hover:bg-stone-800 text-white px-8 py-4 text-lg transition">Continue</button>
         </div>
 
         <!-- Step 5: Reason or Hope -->
@@ -214,27 +147,19 @@
                 <p class="text-sm text-stone-500 mb-2">Step 5 of 5</p>
                 <h2 class="text-2xl font-semibold text-stone-900 leading-relaxed mb-8">You wrote:</h2>
             </div>
-            
             <div class="bg-stone-100 border-l-4 border-stone-400 p-6 mb-8">
                 <p id="userReasonDisplay" class="text-lg text-stone-700 italic serif"></p>
             </div>
-            
             <p class="text-center text-xl text-stone-900 mb-8">Is this a reason — or a hope?</p>
-            
             <div class="space-y-4">
-                <button onclick="answerQ4('reason')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">
-                    Reason
-                </button>
-                <button onclick="answerQ4('hope')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">
-                    Hope
-                </button>
+                <button onclick="answerQ4('reason')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">Reason</button>
+                <button onclick="answerQ4('hope')" class="w-full border border-stone-300 hover:border-stone-500 px-8 py-4 text-lg transition text-stone-700">Hope</button>
             </div>
         </div>
 
         <!-- Verdict -->
         <div id="verdictScreen" class="step-screen hidden max-w-xl mx-auto px-6 w-full text-center">
             <p id="verdictText" class="text-2xl md:text-3xl text-stone-900 leading-relaxed serif"></p>
-            
             <div class="mt-16">
                 <a href="/" class="text-stone-500 hover:text-stone-700 text-sm">Return home</a>
             </div>
@@ -245,116 +170,95 @@
     <div id="walkAwayScreen" class="hidden min-h-[80vh] flex items-center justify-center">
         <div class="max-w-lg mx-auto px-6 text-center">
             <p class="text-3xl text-stone-900 serif mb-6">Good.</p>
-            <p class="text-lg text-stone-600 leading-relaxed mb-8">
-                The hardest part of real estate isn't finding deals.<br>
-                It's walking away from the wrong ones.
-            </p>
-            <p class="text-stone-700 mb-12">
-                You just did what most investors can't.
-            </p>
-            <a href="/" class="inline-block bg-stone-900 hover:bg-stone-800 text-white px-8 py-4 text-lg transition">
-                Return Home
-            </a>
+            <p class="text-lg text-stone-600 leading-relaxed mb-8">The hardest part of real estate isn't finding deals.<br>It's walking away from the wrong ones.</p>
+            <p class="text-stone-700 mb-12">You just did what most investors can't.</p>
+            <a href="/" class="inline-block bg-stone-900 hover:bg-stone-800 text-white px-8 py-4 text-lg transition">Return Home</a>
         </div>
     </div>
 
+    <script src="js/auth-init.js"></script>
     <script>
     (function() {
-        const SUPABASE_URL = 'https://dvuhtfzsvcacyrlfettz.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2dWh0ZnpzdmNhY3lybGZldHR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NDk3OTYsImV4cCI6MjA4NTIyNTc5Nn0.vUtnPXeQrzU0kO0E7qK2qJtZ_RCqnXCEFSa60adHld0';
-        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        let currentUser = null;
+        let isSignedIn = false;
         let hasAccess = false;
-        let runCount = 0;
-        
+
         let dealData = {};
         let failFlags = 0;
         let warningFlags = 0;
 
-        // Check access on load
         async function checkAccess() {
-            const { data: { user } } = await sb.auth.getUser();
-            currentUser = user;
-            
-            if (user) {
-                // Check if user has paid access
-                const { data: purchase } = await sb
-                    .from('user_purchases')
-                    .select('plan_type')
-                    .eq('user_id', user.id)
-                    .in('plan_type', ['discipline', 'system'])
-                    .single();
-                
-                if (purchase) {
-                    hasAccess = true;
+            try {
+                isSignedIn = window.REBWB.isSignedIn();
+
+                if (isSignedIn) {
+                    const res = await window.REBWB.apiFetch('/api/access');
+                    if (res.ok) {
+                        const data = await res.json();
+                        hasAccess = !!data.hasAccess;
+                    }
                 }
-                
-                // Get run count
-                const { data: runs } = await sb
-                    .from('kill_switch_runs')
-                    .select('id')
-                    .eq('user_id', user.id);
-                
-                runCount = runs ? runs.length : 0;
-            } else {
-                // Check localStorage for anonymous run
-                runCount = parseInt(localStorage.getItem('ks_run_count') || '0');
-            }
-            
-            // Block if no access and already ran once
-            if (!hasAccess && runCount >= 1) {
-                showBlocked();
+
+                // Block anonymous users who already used their free run
+                if (!isSignedIn) {
+                    const anonRunCount = parseInt(localStorage.getItem('ks_run_count') || '0', 10);
+                    if (anonRunCount >= 1) showBlocked();
+                }
+            } catch (err) {
+                console.error('Access check failed:', err);
             }
         }
-        
+
         function showBlocked() {
             document.getElementById('stepContainer').classList.add('hidden');
             document.getElementById('blockedScreen').classList.remove('hidden');
         }
-        
+
         function showStep(stepNum) {
             document.querySelectorAll('.step-screen').forEach(el => el.classList.add('hidden'));
             document.getElementById('step' + stepNum).classList.remove('hidden');
         }
 
-        // Show blocking modal
         function showBlockingModal() {
             document.getElementById('blockingModal').classList.remove('hidden');
         }
 
-        // Hide blocking modal
         function hideBlockingModal() {
             document.getElementById('blockingModal').classList.add('hidden');
         }
 
-        // Continue anyway from blocking modal
         function continueAnyway() {
             hideBlockingModal();
             showStep(3);
         }
 
-        // Walk away from blocking modal
-        function walkAway() {
-            hideBlockingModal();
-            document.getElementById('stepContainer').classList.add('hidden');
-            document.getElementById('walkAwayScreen').classList.remove('hidden');
-            
-            // Record that they walked away (counts as a run)
-            if (currentUser) {
-                sb.from('kill_switch_runs').insert({
-                    user_id: currentUser.id,
-                    deal_data: dealData,
-                    fail_flags: 1,
-                    warning_flags: 0,
-                    verdict: 'User chose to walk away'
-                });
+        async function recordRun(payload) {
+            if (isSignedIn) {
+                try {
+                    await window.REBWB.apiFetch('/api/kill-switch/runs', {
+                        method: 'POST',
+                        body: JSON.stringify(payload),
+                    });
+                } catch (err) {
+                    console.error('Failed to record run:', err);
+                }
             } else {
                 localStorage.setItem('ks_run_count', '1');
             }
         }
 
-        // Character count for reason
+        function walkAway() {
+            hideBlockingModal();
+            document.getElementById('stepContainer').classList.add('hidden');
+            document.getElementById('walkAwayScreen').classList.remove('hidden');
+
+            recordRun({
+                deal_data: dealData,
+                fail_flags: 1,
+                warning_flags: 0,
+                verdict: 'User chose to walk away',
+            });
+        }
+
         document.getElementById('whyReason').addEventListener('input', function() {
             const len = this.value.length;
             const el = document.getElementById('charCount');
@@ -369,13 +273,12 @@
 
         function nextStep(from) {
             if (from === 1) {
-                // Validate inputs
                 const price = document.getElementById('purchasePrice').value;
                 const rent = document.getElementById('monthlyRent').value;
                 const expenses = document.getElementById('monthlyExpenses').value;
                 const cash = document.getElementById('cashInvested').value;
                 const reason = document.getElementById('whyReason').value;
-                
+
                 if (!price || !rent || !expenses || !cash) {
                     alert('Please fill in all number fields.');
                     return;
@@ -384,98 +287,74 @@
                     alert('Please write at least 10 characters about why you want this deal.');
                     return;
                 }
-                
-                dealData = { 
+
+                dealData = {
                     purchasePrice: parseFloat(price),
                     monthlyRent: parseFloat(rent),
                     monthlyExpenses: parseFloat(expenses),
                     cashInvested: parseFloat(cash),
-                    reason: reason
+                    reason: reason,
                 };
-                
+
                 showStep(2);
             }
         }
-        
+
         function answerQ1(answer) {
             dealData.q1 = answer;
             if (answer === 'no') {
                 failFlags++;
-                // Show BLOCKING MODAL instead of inline message
                 showBlockingModal();
             } else {
                 showStep(3);
             }
         }
-        
+
         function answerQ2(answer) {
             dealData.q2 = answer;
-            if (answer === 'no') {
-                warningFlags++;
-            } else if (answer === 'barely') {
-                warningFlags++;
-            }
+            if (answer === 'no' || answer === 'barely') warningFlags++;
             showStep(4);
         }
-        
+
         function answerQ3() {
             const checked = document.querySelectorAll('#mustGoRightOptions input:checked');
             dealData.q3 = Array.from(checked).map(c => c.value);
-            
-            if (checked.length > 1) {
-                failFlags++;
-            }
-            
-            // Show reason
+            if (checked.length > 1) failFlags++;
             document.getElementById('userReasonDisplay').textContent = dealData.reason;
             showStep(5);
         }
-        
+
         function answerQ4(answer) {
             dealData.q4 = answer;
-            if (answer === 'hope') {
-                failFlags++;
-            }
-            
+            if (answer === 'hope') failFlags++;
             showVerdict();
         }
-        
+
         async function showVerdict() {
             let verdict = '';
-            
             if (failFlags === 0 && warningFlags === 0) {
                 verdict = 'This deal works even if you\'re wrong.';
-            } else if (failFlags === 1 || warningFlags >= 1) {
-                verdict = 'This deal only works if your assumptions hold.';
             } else if (failFlags >= 2) {
                 verdict = 'This deal requires belief, not math.';
             } else {
                 verdict = 'This deal only works if your assumptions hold.';
             }
-            
+
             document.getElementById('verdictText').textContent = verdict;
-            
-            // Record the run
-            if (currentUser) {
-                await sb.from('kill_switch_runs').insert({
-                    user_id: currentUser.id,
-                    deal_data: dealData,
-                    fail_flags: failFlags,
-                    warning_flags: warningFlags,
-                    verdict: verdict
-                });
-            } else {
-                localStorage.setItem('ks_run_count', '1');
-            }
-            
+
+            await recordRun({
+                deal_data: dealData,
+                fail_flags: failFlags,
+                warning_flags: warningFlags,
+                verdict: verdict,
+            });
+
             document.querySelectorAll('.step-screen').forEach(el => el.classList.add('hidden'));
             document.getElementById('verdictScreen').classList.remove('hidden');
         }
-        
-        // Initialize
+
         checkAccess();
-        
-        // Expose functions to global scope for onclick handlers
+
         window.nextStep = nextStep;
         window.answerQ1 = answerQ1;
         window.answerQ2 = answerQ2;

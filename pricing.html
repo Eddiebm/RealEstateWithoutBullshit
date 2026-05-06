@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pricing - Real Estate Without Bullsh*t</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { font-family: 'Georgia', serif; }
         .sans { font-family: system-ui, -apple-system, sans-serif; }
@@ -24,9 +23,6 @@
                     <a href="course.html" class="text-gray-300 hover:text-white transition">Course</a>
                     <a href="pricing.html" class="text-white font-semibold">Pricing</a>
                     <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition">Login</a>
-                    <button id="theme-toggle" onclick="toggleTheme()" class="text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-700 transition" title="Toggle light/dark mode">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                    </button>
                 </div>
             </div>
         </div>
@@ -49,51 +45,51 @@
     <section class="py-20 bg-gray-900">
         <div class="max-w-4xl mx-auto px-6">
             <div class="grid md:grid-cols-3 gap-8">
-                
+
                 <!-- Tier 1: Free -->
                 <div class="bg-gray-800 border border-gray-700 rounded-lg p-8">
                     <p class="text-sm text-gray-400 sans mb-2">Free</p>
                     <h3 class="text-xl text-white mb-4">One Honest Look</h3>
                     <p class="text-3xl text-white mb-6 sans">$0</p>
-                    
+
                     <ul class="space-y-3 text-gray-300 sans text-sm mb-8">
                         <li>One Kill Switch run only</li>
                         <li class="text-gray-500">No saving</li>
                         <li class="text-gray-500">No reruns</li>
                         <li class="text-gray-500">No history</li>
                     </ul>
-                    
+
                     <a href="kill-switch.html" class="block text-center border border-gray-600 hover:border-gray-400 text-gray-300 px-6 py-3 rounded-lg sans transition">
                         Try Once
                     </a>
                 </div>
-                
+
                 <!-- Tier 2: Discipline Access -->
                 <div id="discipline" class="bg-gray-800 border-2 border-blue-500 rounded-lg p-8">
                     <p class="text-sm text-blue-400 sans mb-2">Most Popular</p>
                     <h3 class="text-xl text-white mb-4">Unlimited Runs</h3>
                     <p class="text-3xl text-white mb-1 sans">$79<span class="text-lg text-gray-400">/month</span></p>
                     <p class="text-sm text-gray-400 sans mb-6">or $697/year (save $251)</p>
-                    
+
                     <ul class="space-y-3 text-gray-300 sans text-sm mb-8">
                         <li>Unlimited Kill Switch runs</li>
                         <li>Deal history</li>
                         <li>Verdict comparison</li>
                         <li>Deal labels: Walked Away, Passed, Regretted</li>
                     </ul>
-                    
-                    <button onclick="handleCheckout('discipline_monthly')" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg sans transition">
+
+                    <button data-plan="discipline" class="checkout-btn w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg sans transition">
                         Unlock Discipline
                     </button>
                 </div>
-                
+
                 <!-- Tier 3: System Builder -->
                 <div id="system" class="bg-gray-800 border border-gray-700 rounded-lg p-8">
                     <p class="text-sm text-gray-400 sans mb-2">System Builder</p>
                     <h3 class="text-xl text-white mb-4">Full Infrastructure</h3>
                     <p class="text-3xl text-white mb-1 sans">$149<span class="text-lg text-gray-400">/month</span></p>
                     <p class="text-sm text-gray-400 sans mb-6">or $1,297/year (save $491)</p>
-                    
+
                     <ul class="space-y-3 text-gray-300 sans text-sm mb-8">
                         <li>Scenario stress tests</li>
                         <li>Assumption exposure</li>
@@ -101,8 +97,8 @@
                         <li>Decision journal</li>
                         <li>Pattern tagging</li>
                     </ul>
-                    
-                    <button onclick="handleCheckout('system_onetime')" class="w-full border border-gray-600 hover:border-gray-400 text-gray-300 px-6 py-3 rounded-lg sans transition">
+
+                    <button data-plan="system" class="checkout-btn w-full border border-gray-600 hover:border-gray-400 text-gray-300 px-6 py-3 rounded-lg sans transition">
                         Build My System
                     </button>
                 </div>
@@ -141,9 +137,9 @@
                 <div>
                     <h4 class="text-white font-semibold mb-4">Legal</h4>
                     <ul class="space-y-2">
-                        <li><a href="privacy.html" class="text-gray-400 hover:text-white transition text-sm">Privacy Policy</a></li>
-                        <li><a href="terms.html" class="text-gray-400 hover:text-white transition text-sm">Terms of Use</a></li>
-                        <li><a href="cookies.html" class="text-gray-400 hover:text-white transition text-sm">Cookie Policy</a></li>
+                        <li><a href="privacy-policy.html" class="text-gray-400 hover:text-white transition text-sm">Privacy Policy</a></li>
+                        <li><a href="terms-of-use.html" class="text-gray-400 hover:text-white transition text-sm">Terms of Use</a></li>
+                        <li><a href="cookie-policy.html" class="text-gray-400 hover:text-white transition text-sm">Cookie Policy</a></li>
                         <li><a href="disclaimer.html" class="text-gray-400 hover:text-white transition text-sm">Disclaimer</a></li>
                     </ul>
                 </div>
@@ -151,45 +147,43 @@
         </div>
     </footer>
 
+    <script src="js/auth-init.js"></script>
     <script>
-        const SUPABASE_URL = 'https://dvuhtfzsvcacyrlfettz.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2dWh0ZnpzdmNhY3lybGZldHR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NDk3OTYsImV4cCI6MjA4NTIyNTc5Nn0.vUtnPXeQrzU0kO0E7qK2qJtZ_RCqnXCEFSa60adHld0';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        document.querySelectorAll('.checkout-btn').forEach(btn => {
+            btn.addEventListener('click', () => handleCheckout(btn));
+        });
 
-        async function handleCheckout(planType) {
-            const btn = event.target;
-            btn.textContent = 'Loading...';
+        async function handleCheckout(btn) {
+            const planType = btn.dataset.plan;
+            const originalText = btn.textContent;
+            btn.textContent = 'Loading…';
             btn.disabled = true;
-            
+
             try {
-                let customerEmail = '';
-                const { data: { user } } = await supabase.auth.getUser();
-                if (user) customerEmail = user.email;
-                
-                const response = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        planType,
-                        customerEmail,
-                        successUrl: window.location.origin + '/kill-switch.html?payment=success',
-                        cancelUrl: window.location.origin + '/pricing.html?payment=cancelled'
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.error) {
-                    throw new Error(result.error.message);
+                if (!window.REBWB.isSignedIn()) {
+                    window.location.href = '/login.html?redirect=' + encodeURIComponent('/pricing.html');
+                    return;
                 }
-                
-                if (result.data?.checkoutUrl) {
-                    window.location.href = result.data.checkoutUrl;
+
+                const res = await window.REBWB.apiFetch('/api/checkout', {
+                    method: 'POST',
+                    body: JSON.stringify({ plan_type: planType }),
+                });
+                const result = await res.json();
+
+                if (!res.ok || result.error) {
+                    throw new Error(result.error || `Checkout failed (${res.status})`);
+                }
+
+                if (result.url) {
+                    window.location.href = result.url;
+                } else {
+                    throw new Error('No checkout URL returned');
                 }
             } catch (error) {
                 console.error('Checkout error:', error);
                 alert('Unable to start checkout. Please try again or contact support.');
-                btn.textContent = planType.includes('discipline') ? 'Unlock Discipline' : 'Build My System';
+                btn.textContent = originalText;
                 btn.disabled = false;
             }
         }

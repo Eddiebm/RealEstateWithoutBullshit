@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - REBWB</title>
+    <title>Sign In - REBWB</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col">
@@ -28,37 +27,34 @@
         </div>
     </nav>
 
-    <!-- Login Form -->
+    <!-- Login -->
     <main class="flex-1 flex items-center justify-center px-4 py-12">
         <div class="w-full max-w-md">
             <div class="bg-gray-800 rounded-lg p-8 border border-gray-700">
-                <h1 class="text-2xl font-bold text-center mb-6">Sign In to Your Account</h1>
-                
+                <h1 class="text-2xl font-bold text-center mb-2">Welcome back</h1>
+                <p class="text-gray-400 text-center mb-6">Enter your email — we'll send you a sign-in link.</p>
+
                 <div id="error-message" class="hidden bg-red-900/50 border border-red-500 text-red-200 px-4 py-3 rounded mb-4"></div>
-                <div id="success-message" class="hidden bg-green-900/50 border border-green-500 text-green-200 px-4 py-3 rounded mb-4"></div>
-                
-                <form id="login-form" class="space-y-4">
+
+                <form id="auth-form" class="space-y-4">
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
-                        <input type="email" id="email" name="email" required
-                            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
-                        <input type="password" id="password" name="password" required
+                        <input type="email" id="email" name="email" required autocomplete="email"
                             class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                     </div>
                     <button type="submit" id="submit-btn"
                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition">
-                        Sign In
+                        Send sign-in link
                     </button>
                 </form>
-                
-                <p class="mt-4 text-center">
-                    <a href="forgot-password.html" class="text-blue-400 hover:text-blue-300 text-sm">Forgot your password?</a>
-                </p>
-                <p class="mt-4 text-center text-gray-400">
-                    Don't have an account? <a href="signup.html" class="text-blue-400 hover:text-blue-300">Sign up</a>
+
+                <div id="sent-message" class="hidden text-center mt-6">
+                    <p class="text-green-300 mb-2">Check your inbox.</p>
+                    <p class="text-gray-400 text-sm">We sent a sign-in link to <span id="sent-email" class="text-white"></span>. The link expires in 15 minutes.</p>
+                </div>
+
+                <p class="mt-6 text-center text-gray-400">
+                    New here? <a href="signup.html" class="text-blue-400 hover:text-blue-300">Create an account</a>
                 </p>
             </div>
         </div>
@@ -83,58 +79,64 @@
                 <div>
                     <h3 class="text-white font-semibold mb-4">Legal</h3>
                     <ul class="space-y-2 text-gray-400">
-                        <li><a href="privacy.html" class="hover:text-white transition">Privacy Policy</a></li>
-                        <li><a href="terms.html" class="hover:text-white transition">Terms of Use</a></li>
-                        <li><a href="cookies.html" class="hover:text-white transition">Cookie Policy</a></li>
+                        <li><a href="privacy-policy.html" class="hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="terms-of-use.html" class="hover:text-white transition">Terms of Use</a></li>
+                        <li><a href="cookie-policy.html" class="hover:text-white transition">Cookie Policy</a></li>
                         <li><a href="disclaimer.html" class="hover:text-white transition">Disclaimer</a></li>
                     </ul>
                 </div>
             </div>
             <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2024 REBWB - Real Estate Without Bullshit. All rights reserved.</p>
+                <p>&copy; 2026 REBWB - Real Estate Without Bullshit. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <script src="js/auth.js"></script>
+    <script src="js/auth-init.js"></script>
     <script>
-        const form = document.getElementById('login-form');
-        const errorMsg = document.getElementById('error-message');
-        const successMsg = document.getElementById('success-message');
-        const submitBtn = document.getElementById('submit-btn');
+        (() => {
+            // Stash redirect target if present.
+            const redirect = new URLSearchParams(window.location.search).get('redirect');
+            if (redirect) sessionStorage.setItem('rebwb_post_login_redirect', redirect);
 
-        // Check if already logged in
-        (async () => {
-            const session = await getSession();
-            if (session) {
-                const redirect = new URLSearchParams(window.location.search).get('redirect') || '/course.html';
-                window.location.href = redirect;
+            // Already signed in?
+            if (window.REBWB.isSignedIn()) {
+                window.location.href = redirect || '/course.html';
+                return;
             }
+
+            const form = document.getElementById('auth-form');
+            const errorMsg = document.getElementById('error-message');
+            const sentMsg = document.getElementById('sent-message');
+            const sentEmailEl = document.getElementById('sent-email');
+            const submitBtn = document.getElementById('submit-btn');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                errorMsg.classList.add('hidden');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending…';
+
+                const email = document.getElementById('email').value.trim();
+                try {
+                    const res = await window.REBWB.apiFetch('/api/auth/request', {
+                        method: 'POST',
+                        body: JSON.stringify({ email }),
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+
+                    form.classList.add('hidden');
+                    sentEmailEl.textContent = email;
+                    sentMsg.classList.remove('hidden');
+                } catch (err) {
+                    errorMsg.textContent = err.message || 'Failed to send link. Try again.';
+                    errorMsg.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send sign-in link';
+                }
+            });
         })();
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            errorMsg.classList.add('hidden');
-            successMsg.classList.add('hidden');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Signing in...';
-
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            try {
-                await signIn(email, password);
-                successMsg.textContent = 'Success! Redirecting...';
-                successMsg.classList.remove('hidden');
-                const redirect = new URLSearchParams(window.location.search).get('redirect') || '/course.html';
-                setTimeout(() => window.location.href = redirect, 500);
-            } catch (error) {
-                errorMsg.textContent = error.message || 'Failed to sign in. Please check your credentials.';
-                errorMsg.classList.remove('hidden');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Sign In';
-            }
-        });
     </script>
 </body>
 </html>

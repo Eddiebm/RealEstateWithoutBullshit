@@ -1,0 +1,9 @@
+name = "rebwb-api"
+main = "workers/api.js"
+compatibility_date = "2026-05-01"
+compatibility_flags = ["nodejs_compat"]
+account_id = "07813953b9a828435bab878a70d4b1df"
+
+[[routes]]
+pattern = "api.realestatewithoutbullshit.com/*"
+zone_name = "realestatewithoutbullshit.com"

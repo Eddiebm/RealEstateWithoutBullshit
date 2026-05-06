@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - REBWB</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col">
@@ -28,39 +27,32 @@
         </div>
     </nav>
 
-    <!-- Signup Form -->
+    <!-- Signup -->
     <main class="flex-1 flex items-center justify-center px-4 py-12">
         <div class="w-full max-w-md">
             <div class="bg-gray-800 rounded-lg p-8 border border-gray-700">
-                <h1 class="text-2xl font-bold text-center mb-2">Create Your Account</h1>
-                <p class="text-gray-400 text-center mb-6">Get instant access to the complete course</p>
-                
+                <h1 class="text-2xl font-bold text-center mb-2">Create your account</h1>
+                <p class="text-gray-400 text-center mb-6">Enter your email — we'll send you a sign-in link. No password needed.</p>
+
                 <div id="error-message" class="hidden bg-red-900/50 border border-red-500 text-red-200 px-4 py-3 rounded mb-4"></div>
-                <div id="success-message" class="hidden bg-green-900/50 border border-green-500 text-green-200 px-4 py-3 rounded mb-4"></div>
-                
-                <form id="signup-form" class="space-y-4">
+
+                <form id="auth-form" class="space-y-4">
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
-                        <input type="email" id="email" name="email" required
-                            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
-                        <input type="password" id="password" name="password" required minlength="6"
-                            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                        <p class="text-xs text-gray-500 mt-1">Minimum 6 characters</p>
-                    </div>
-                    <div>
-                        <label for="confirm-password" class="block text-sm font-medium text-gray-300 mb-1">Confirm Password</label>
-                        <input type="password" id="confirm-password" name="confirm-password" required minlength="6"
+                        <input type="email" id="email" name="email" required autocomplete="email"
                             class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                     </div>
                     <button type="submit" id="submit-btn"
                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition">
-                        Create Account
+                        Send sign-in link
                     </button>
                 </form>
-                
+
+                <div id="sent-message" class="hidden text-center mt-6">
+                    <p class="text-green-300 mb-2">Check your inbox.</p>
+                    <p class="text-gray-400 text-sm">We sent a sign-in link to <span id="sent-email" class="text-white"></span>. The link expires in 15 minutes.</p>
+                </div>
+
                 <p class="mt-6 text-center text-gray-400">
                     Already have an account? <a href="login.html" class="text-blue-400 hover:text-blue-300">Sign in</a>
                 </p>
@@ -68,60 +60,46 @@
         </div>
     </main>
 
-    <script src="js/auth.js"></script>
+    <script src="js/auth-init.js"></script>
     <script>
-        const form = document.getElementById('signup-form');
-        const errorMsg = document.getElementById('error-message');
-        const successMsg = document.getElementById('success-message');
-        const submitBtn = document.getElementById('submit-btn');
-
-        // Check if already logged in
-        (async () => {
-            const session = await getSession();
-            if (session) {
+        (() => {
+            if (window.REBWB.isSignedIn()) {
                 window.location.href = '/course.html';
-            }
-        })();
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            errorMsg.classList.add('hidden');
-            successMsg.classList.add('hidden');
-
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-
-            if (password !== confirmPassword) {
-                errorMsg.textContent = 'Passwords do not match.';
-                errorMsg.classList.remove('hidden');
                 return;
             }
 
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Creating account...';
+            const form = document.getElementById('auth-form');
+            const errorMsg = document.getElementById('error-message');
+            const sentMsg = document.getElementById('sent-message');
+            const sentEmailEl = document.getElementById('sent-email');
+            const submitBtn = document.getElementById('submit-btn');
 
-            try {
-                const data = await signUp(email, password);
-                if (data.user && !data.session) {
-                    // Email confirmation required
-                    successMsg.textContent = 'Account created! Please check your email to confirm your account.';
-                    successMsg.classList.remove('hidden');
-                    form.reset();
-                } else {
-                    // Auto-logged in
-                    successMsg.textContent = 'Account created! Redirecting to course...';
-                    successMsg.classList.remove('hidden');
-                    setTimeout(() => window.location.href = '/course.html', 1000);
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                errorMsg.classList.add('hidden');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending…';
+
+                const email = document.getElementById('email').value.trim();
+                try {
+                    const res = await window.REBWB.apiFetch('/api/auth/request', {
+                        method: 'POST',
+                        body: JSON.stringify({ email }),
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+
+                    form.classList.add('hidden');
+                    sentEmailEl.textContent = email;
+                    sentMsg.classList.remove('hidden');
+                } catch (err) {
+                    errorMsg.textContent = err.message || 'Failed to send link. Try again.';
+                    errorMsg.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send sign-in link';
                 }
-            } catch (error) {
-                errorMsg.textContent = error.message || 'Failed to create account. Please try again.';
-                errorMsg.classList.remove('hidden');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Create Account';
-            }
-        });
+            });
+        })();
     </script>
 </body>
 </html>
